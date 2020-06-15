@@ -2,6 +2,9 @@
 const discord = require("discord.js");
 const client = new discord.Client();
 
+//Defines Chalk to get colored console output
+const chalk = require('chalk')
+
 // Gets the config from the files
 const config = require('./config.json')
 
@@ -12,14 +15,16 @@ require('dotenv').config()
 client.on("ready", (__) => {
 
     client.user.setActivity('A New Bot!')
-
+    console.log(chalk.green('Online!'))
 })
 
 // Hearing on messages
 client.on("message", async (message) => {
 
+  try {
+
     // Remove the // in the following comment will make the bot ignore dm messages
-    if(message.channel.type == "dm") return
+    if(message.channel.type === "dm") return
 
     // Define args that you can use for example !say hello, NOTE: args always starts at 0
     const args = message.content
@@ -34,7 +39,7 @@ client.on("message", async (message) => {
     if (!(message.content.startsWith(config.prefix))) return
 
     // Ping command
-    if (command == "ping") {
+    if (command === "ping") {
         const m = await message.channel.send("Ping?");
         m.edit(
           `Pong! Latency is ${
@@ -45,7 +50,7 @@ client.on("message", async (message) => {
 
       // a Simple command that replys to a command
       
-      if (command == 'hello') /* if the command is !hello */{
+      if (command === 'hello') /* if the command is !hello */{
 
         // gets the message author and defines it in author
         let author = message.author
@@ -54,7 +59,11 @@ client.on("message", async (message) => {
         message.reply('Hello')
       }
 
-
+    }
+    // Catches errors and console log then
+    catch (error) {
+      console.log(chalk.red(`Error!: \n\n${error}`))
+    }
 })
 
 // This will login the client with the token defined in .env
